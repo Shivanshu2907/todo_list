@@ -1,37 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/widgets/task_list.dart';
+import 'package:todo_list/widgets/task_list.dart';
+import 'add_task.dart';
+import 'package:todo_list/main.dart';
+import 'package:provider/provider.dart';
 
-class TasksScreen extends StatelessWidget {
-  // List<Widget> chil() {
-  //   List<Widget> l = [];
-  //   for (int i = 1; i <= 40; i++) {
-  //     l.add(
-  //       Padding(
-  //         padding: const EdgeInsets.all(8.0),
-  //         child: Container(
-  //           decoration: BoxDecoration(boxShadow: [
-  //             BoxShadow(
-  //               color: Colors.amber,
-  //               blurRadius: 0.0,
-  //               spreadRadius: 0.0,
-  //             ),
-  //           ]),
-  //           child: Text(
-  //             'this is task $i',
-  //             textAlign: TextAlign.center,
-  //             style: TextStyle(
-  //               fontSize: 17.0,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   return l;
-  // }
+class TasksScreen extends StatefulWidget {
+  @override
+  _TasksScreenState createState() => _TasksScreenState();
+}
 
+class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
+    Provider.of<Tasks>(context).undonetasks();
     return Scaffold(
       backgroundColor: Colors.lightBlueAccent,
       body: Container(
@@ -63,7 +44,10 @@ class TasksScreen extends StatelessWidget {
                         fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    '7 Tasks',
+                    Provider.of<Tasks>(context).c == 0
+                        ? 'All Done....'
+                        : '${Provider.of<Tasks>(context).c} Tasks',
+                    // '${Provider.of<Tasks>(context).length()}',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
@@ -95,7 +79,18 @@ class TasksScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.lightBlueAccent,
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: AddTask(),
+                    ),
+                  ));
+        },
         child: Icon(
           Icons.add,
           color: Colors.white,
